@@ -1,0 +1,41 @@
+{
+    "name": "phpro/rest-demo",
+    "description": "An example of how to make a good rest client",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Jan Vernieuwe",
+            "email": "jan.vernieuwe@phpro.be"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Phpro\\RestDemo\\": [
+                "src"
+            ]
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Phpro\\RestDemo\\": [
+                "test"
+            ]
+        }
+    },
+    "require": {
+        "php": "^7.4",
+        "psr/http-message": "^1.0",
+        "psr/http-client": "^1.0",
+        "jms/serializer": "^3.3"
+    },
+    "require-dev": {
+        "phpro/grumphp": "^0.16.2",
+        "phpstan/phpstan": "^0.11.19",
+        "friendsofphp/php-cs-fixer": "^2.16",
+        "roave/security-advisories": "dev-master",
+        "nikic/php-parser": "^4.3",
+        "jakub-onderka/php-parallel-lint": "^1.0",
+        "phpspec/phpspec": "^6.1"
+    }
+}
