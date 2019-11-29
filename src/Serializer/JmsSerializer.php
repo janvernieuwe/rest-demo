@@ -21,7 +21,7 @@ class JmsSerializer implements ResponseSerializerInterface
     public static function create(): self
     {
         // Register annotations
-        $loader = require __DIR__ . '/../../vendor/autoload.php';
+        $loader = require 'vendor/autoload.php';
         /** @var callable $callable */
         $callable = [$loader, 'loadClass'];
         AnnotationRegistry::registerLoader($callable);
