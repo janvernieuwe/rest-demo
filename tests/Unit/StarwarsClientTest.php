@@ -10,7 +10,6 @@ use Phpro\RestDemo\Serializer\JmsSerializer;
 use PHPUnit\Framework\TestCase;
 use Phpro\RestDemo\StarwarsClient;
 use Psr\Http\Client\ClientExceptionInterface;
-use VCR\VCR;
 
 class StarwarsClientTest extends TestCase
 {
