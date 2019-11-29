@@ -2,16 +2,15 @@
 
 namespace Phpro\RestDemo;
 
-use Nyholm\Psr7\Request;
+use Phpro\RestDemo\Request\FilmRequest;
 use Phpro\RestDemo\Serializer\JmsSerializer;
 use Phpro\RestDemo\Serializer\ResponseSerializerInterface;
-use Phpro\RestDemo\Type\Film;
+use Phpro\RestDemo\Type;
 use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Client\ClientInterface;
 
 class StarwarsClient
 {
-    private const BASE_URI = 'https://swapi.co';
     private ClientInterface $client;
     private ResponseSerializerInterface $responseSerializer;
 
@@ -24,10 +23,9 @@ class StarwarsClient
     /**
      * @throws ClientExceptionInterface
      */
-    public function getFilm(int $filmId): Film
+    public function getFilm(FilmRequest $filmRequest): Type\Film
     {
-        $request = new Request('GET', sprintf('%s%s%s', self::BASE_URI, '/api/films/', $filmId));
-        $response = $this->client->sendRequest($request);
-        return $this->responseSerializer->convertResponse($response, Film::class);
+        $response = $this->client->sendRequest($filmRequest->toRequest());
+        return $this->responseSerializer->convertResponse($response, Type\Film::class);
     }
 }
