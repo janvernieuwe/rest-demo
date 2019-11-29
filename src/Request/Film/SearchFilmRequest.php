@@ -10,7 +10,7 @@ class SearchFilmRequest extends AbstractRequest
     public static function byTitle(string $title): self
     {
         $instance = new self();
-        $instance->request = new Request('GET', sprintf('%s%s?search=%s', self::BASE_URI, '/api/films', $title));
+        $instance->request = new Request('GET', sprintf('%s?search=%s', '/api/films', $title));
 
         return $instance;
     }

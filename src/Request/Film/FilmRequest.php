@@ -10,7 +10,7 @@ class FilmRequest extends AbstractRequest
     public static function byId(int $id): self
     {
         $instance = new self();
-        $instance->request = new Request('GET', sprintf('%s%s%s', self::BASE_URI, '/api/films/', $id));
+        $instance->request = new Request('GET', sprintf('%s%s', '/api/films/', $id));
 
         return $instance;
     }

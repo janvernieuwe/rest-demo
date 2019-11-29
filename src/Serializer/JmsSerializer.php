@@ -18,10 +18,10 @@ class JmsSerializer implements ResponseSerializerInterface
         $this->format = $format;
     }
 
-    public static function create(): self
+    public static function create(string $autoloader = 'vendor/autoload.php'): self
     {
         // Register annotations
-        $loader = require 'vendor/autoload.php';
+        $loader = require $autoloader;
         /** @var callable $callable */
         $callable = [$loader, 'loadClass'];
         AnnotationRegistry::registerLoader($callable);
@@ -29,6 +29,7 @@ class JmsSerializer implements ResponseSerializerInterface
         // Create serializer
         $builder = SerializerBuilder::create();
         $builder->setCacheDir(__DIR__ . '/../../var/cache');
+
         return new self($builder->build(), 'json');
     }
 

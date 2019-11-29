@@ -6,7 +6,6 @@ use Nyholm\Psr7\Request;
 
 abstract class AbstractRequest
 {
-    protected const BASE_URI = 'https://swapi.co';
     protected Request $request;
 
     protected function __construct()

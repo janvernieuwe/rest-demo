@@ -2,3 +2,5 @@
 /.php_cs.cache
 /composer.lock
 /var/cache/*
+/test/.phpunit.result.cache
+/.phpunit.result.cache

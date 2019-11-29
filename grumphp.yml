@@ -1,9 +1,5 @@
 parameters:
-    git_dir: .
-    bin_dir: vendor/bin
     tasks:
-        #phpspec:
-        #    config_file: tests/spec.yml
         phplint: ~
         yamllint: ~
         composer:
@@ -17,17 +13,18 @@ parameters:
                     blacklist: [var_dump, echo, print, dump, print_r, phpinfo]
         phpstan:
             level: max
-            configuration: "test/phpstan.neon"
+            configuration: "tests/phpstan.neon"
             ignore_patterns:
                 - "tests/"
                 - "vendor/"
         phpcsfixer2:
             allow_risky: true
             cache_file: ~
-            config: test/.php_cs.dist
+            config: tests/.php_cs.dist
             rules: []
             using_cache: ~
             config_contains_finder: true
             verbose: true
             diff: false
             triggered_by: ['php']
+        phpunit: ~

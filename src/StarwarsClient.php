@@ -3,6 +3,8 @@
 namespace Phpro\RestDemo;
 
 use Phpro\RestDemo\Request\AbstractRequest;
+use Phpro\RestDemo\Request\Decorator\RequestDecoratorInterface;
+use Phpro\RestDemo\Request\Decorator\RequestRequestDecorator;
 use Phpro\RestDemo\Request\Film\FilmRequest;
 use Phpro\RestDemo\Request\Film\SearchFilmRequest;
 use Phpro\RestDemo\Serializer\JmsSerializer;
@@ -15,25 +17,16 @@ class StarwarsClient
 {
     private ClientInterface $client;
     private ResponseSerializerInterface $responseSerializer;
+    private RequestDecoratorInterface $requestDecorator;
 
     public function __construct(
         ClientInterface $client,
-        ResponseSerializerInterface $responseSerializer = null
+        ResponseSerializerInterface $responseSerializer = null,
+        string $host = 'swapi.co'
     ) {
         $this->client = $client;
         $this->responseSerializer = $responseSerializer ?? JmsSerializer::create();
-    }
-
-    /**
-     * @throws ClientExceptionInterface
-     */
-    private function request(AbstractRequest $abstractRequest, string $type)
-    {
-        $request = $abstractRequest->toRequest();
-        // $request = $request->withAddedHeader(); // you can add auth here
-        $response = $this->client->sendRequest($request);
-
-        return $this->responseSerializer->convertResponse($response, $type);
+        $this->requestDecorator = new RequestRequestDecorator($host);
     }
 
     /**
@@ -42,6 +35,18 @@ class StarwarsClient
     public function getFilm(FilmRequest $filmRequest): Type\Film\Film
     {
         return $this->request($filmRequest, Type\Film\Film::class);
+    }
+
+    /**
+     * @throws ClientExceptionInterface
+     */
+    private function request(AbstractRequest $abstractRequest, string $type)
+    {
+        $request = $abstractRequest->toRequest();
+        $request = $this->requestDecorator->decorateRequest($request);
+        $response = $this->client->sendRequest($request);
+
+        return $this->responseSerializer->convertResponse($response, $type);
     }
 
     /**
