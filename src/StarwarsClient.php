@@ -2,6 +2,7 @@
 
 namespace Phpro\RestDemo;
 
+use Phpro\RestDemo\Request\AbstractRequest;
 use Phpro\RestDemo\Request\Film\FilmRequest;
 use Phpro\RestDemo\Request\Film\SearchFilmRequest;
 use Phpro\RestDemo\Serializer\JmsSerializer;
@@ -15,8 +16,10 @@ class StarwarsClient
     private ClientInterface $client;
     private ResponseSerializerInterface $responseSerializer;
 
-    public function __construct(ClientInterface $client, ResponseSerializerInterface $responseSerializer = null)
-    {
+    public function __construct(
+        ClientInterface $client,
+        ResponseSerializerInterface $responseSerializer = null
+    ) {
         $this->client = $client;
         $this->responseSerializer = $responseSerializer ?? JmsSerializer::create();
     }
@@ -24,11 +27,21 @@ class StarwarsClient
     /**
      * @throws ClientExceptionInterface
      */
+    private function request(AbstractRequest $abstractRequest, string $type)
+    {
+        $request = $abstractRequest->toRequest();
+        // $request = $request->withAddedHeader(); // you can add auth here
+        $response = $this->client->sendRequest($request);
+
+        return $this->responseSerializer->convertResponse($response, $type);
+    }
+
+    /**
+     * @throws ClientExceptionInterface
+     */
     public function getFilm(FilmRequest $filmRequest): Type\Film\Film
     {
-        $response = $this->client->sendRequest($filmRequest->toRequest());
-
-        return $this->responseSerializer->convertResponse($response, Type\Film\Film::class);
+        return $this->request($filmRequest, Type\Film\Film::class);
     }
 
     /**
@@ -36,8 +49,6 @@ class StarwarsClient
      */
     public function searchFilms(SearchFilmRequest $searchRequest): Type\Film\FilmSearchResponse
     {
-        $response = $this->client->sendRequest($searchRequest->toRequest());
-
-        return $this->responseSerializer->convertResponse($response, Type\Film\FilmSearchResponse::class);
+        return $this->request($searchRequest, Type\Film\FilmSearchResponse::class);
     }
 }
