@@ -1,15 +1,12 @@
 <?php declare(strict_types=1);
 
-namespace Phpro\RestDemo\Request;
+namespace Phpro\RestDemo\Request\Film;
 
 use Nyholm\Psr7\Request;
+use Phpro\RestDemo\Request\AbstractRequest;
 
 class FilmRequest extends AbstractRequest
 {
-    private function __construct()
-    {
-    }
-
     public static function byId(int $id): self
     {
         $instance = new self();

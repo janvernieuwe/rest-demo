@@ -2,7 +2,8 @@
 
 namespace Phpro\RestDemo;
 
-use Phpro\RestDemo\Request\FilmRequest;
+use Phpro\RestDemo\Request\Film\FilmRequest;
+use Phpro\RestDemo\Request\Film\SearchFilmRequest;
 use Phpro\RestDemo\Serializer\JmsSerializer;
 use Phpro\RestDemo\Serializer\ResponseSerializerInterface;
 use Phpro\RestDemo\Type;
@@ -23,9 +24,20 @@ class StarwarsClient
     /**
      * @throws ClientExceptionInterface
      */
-    public function getFilm(FilmRequest $filmRequest): Type\Film
+    public function getFilm(FilmRequest $filmRequest): Type\Film\Film
     {
         $response = $this->client->sendRequest($filmRequest->toRequest());
-        return $this->responseSerializer->convertResponse($response, Type\Film::class);
+
+        return $this->responseSerializer->convertResponse($response, Type\Film\Film::class);
+    }
+
+    /**
+     * @throws ClientExceptionInterface
+     */
+    public function searchFilms(SearchFilmRequest $searchRequest): Type\Film\FilmSearchResponse
+    {
+        $response = $this->client->sendRequest($searchRequest->toRequest());
+
+        return $this->responseSerializer->convertResponse($response, Type\Film\FilmSearchResponse::class);
     }
 }

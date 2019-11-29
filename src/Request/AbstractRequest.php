@@ -9,6 +9,10 @@ abstract class AbstractRequest
     protected const BASE_URI = 'https://swapi.co';
     protected Request $request;
 
+    protected function __construct()
+    {
+    }
+
     public function toRequest(): Request
     {
         return clone $this->request;
