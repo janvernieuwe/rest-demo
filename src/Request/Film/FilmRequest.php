@@ -2,16 +2,42 @@
 
 namespace Phpro\RestDemo\Request\Film;
 
-use Nyholm\Psr7\Request;
-use Phpro\RestDemo\Request\AbstractRequest;
+use Phpro\RestDemo\Request\RequestInterface;
 
-class FilmRequest extends AbstractRequest
+class FilmRequest implements RequestInterface
 {
-    public static function byId(int $id): self
+    private int $id;
+
+    public function withId(int $id): self
     {
-        $instance = new self();
-        $instance->request = new Request('GET', sprintf('%s%s', '/api/films/', $id));
+        $this->id = $id;
+        $instance = new static();
+        $instance->id = $id;
 
         return $instance;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getMethod(): string
+    {
+        return 'GET';
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getPath(): string
+    {
+        return sprintf('%s%s', '/api/films/', $this->id);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getParameters(): array
+    {
+        return [];
     }
 }

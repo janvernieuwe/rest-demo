@@ -47,12 +47,12 @@ use Http\Adapter\Guzzle6\Client as GuzzleAdapter;
 use Phpro\RestDemo\Request\Film\SearchFilmRequest;
 use Phpro\RestDemo\StarwarsClient;
 
-$guzzle = new Client();
+$guzzle = new Client(['base_uri' => 'https://swapi.co']);
 $httpClient = new GuzzleAdapter($guzzle);
 $client = new StarwarsClient($httpClient);
-
-$films = $client->searchFilms(SearchFilmRequest::byTitle('return'));
+$films = $client->searchFilms((new SearchFilmRequest())->withTitle('return'));
 var_dump($films);
+
 
 ```
 

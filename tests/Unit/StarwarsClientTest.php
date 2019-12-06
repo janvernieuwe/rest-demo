@@ -17,7 +17,7 @@ class StarwarsClientTest extends TestCase
 
     public function setUp(): void
     {
-        $guzzle = new Client();
+        $guzzle = new Client(['base_uri' => 'https://swapi.co']);
         $httpClient = new GuzzleAdapter($guzzle);
         $serializer = JmsSerializer::create(__DIR__.'/../../vendor/autoload.php');
         $this->client = new StarwarsClient($httpClient, $serializer);
@@ -29,7 +29,7 @@ class StarwarsClientTest extends TestCase
      */
     public function testGetFilm()
     {
-        $film = $this->client->getFilm(FilmRequest::byId(1));
+        $film = $this->client->getFilm((new FilmRequest())->withId(1));
         self::assertNotNull($film);
     }
 
@@ -40,7 +40,7 @@ class StarwarsClientTest extends TestCase
      */
     public function testSearchFilm()
     {
-        $films = $this->client->searchFilms(SearchFilmRequest::byTitle('return'));
+        $films = $this->client->searchFilms((new SearchFilmRequest())->withTitle('return'));
         self::assertEquals(1, $films->getCount());
         self::assertEquals('Return of the Jedi', $films->getResults()[0]->getTitle());
     }

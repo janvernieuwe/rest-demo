@@ -2,11 +2,10 @@
 
 namespace Phpro\RestDemo;
 
-use Phpro\RestDemo\Request\AbstractRequest;
-use Phpro\RestDemo\Request\Decorator\RequestDecoratorInterface;
-use Phpro\RestDemo\Request\Decorator\RequestRequestDecorator;
 use Phpro\RestDemo\Request\Film\FilmRequest;
 use Phpro\RestDemo\Request\Film\SearchFilmRequest;
+use Phpro\RestDemo\Request\RequestFactory;
+use Phpro\RestDemo\Request\RequestInterface;
 use Phpro\RestDemo\Serializer\JmsSerializer;
 use Phpro\RestDemo\Serializer\ResponseSerializerInterface;
 use Phpro\RestDemo\Type;
@@ -17,16 +16,15 @@ class StarwarsClient
 {
     private ClientInterface $client;
     private ResponseSerializerInterface $responseSerializer;
-    private RequestDecoratorInterface $requestDecorator;
+    private RequestFactory $requestFactory;
 
     public function __construct(
         ClientInterface $client,
-        ResponseSerializerInterface $responseSerializer = null,
-        string $host = 'swapi.co'
+        ResponseSerializerInterface $responseSerializer = null
     ) {
         $this->client = $client;
         $this->responseSerializer = $responseSerializer ?? JmsSerializer::create();
-        $this->requestDecorator = new RequestRequestDecorator($host);
+        $this->requestFactory = new RequestFactory();
     }
 
     /**
@@ -40,10 +38,9 @@ class StarwarsClient
     /**
      * @throws ClientExceptionInterface
      */
-    private function request(AbstractRequest $abstractRequest, string $type)
+    private function request(RequestInterface $requestInterface, string $type)
     {
-        $request = $abstractRequest->toRequest();
-        $request = $this->requestDecorator->decorateRequest($request);
+        $request = $this->requestFactory->createRequest($requestInterface);
         $response = $this->client->sendRequest($request);
 
         return $this->responseSerializer->convertResponse($response, $type);

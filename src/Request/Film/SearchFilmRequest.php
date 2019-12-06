@@ -2,16 +2,41 @@
 
 namespace Phpro\RestDemo\Request\Film;
 
-use Nyholm\Psr7\Request;
-use Phpro\RestDemo\Request\AbstractRequest;
+use Phpro\RestDemo\Request\RequestInterface;
 
-class SearchFilmRequest extends AbstractRequest
+class SearchFilmRequest implements RequestInterface
 {
-    public static function byTitle(string $title): self
+    private string $title;
+
+    public function withTitle(string $title): self
     {
-        $instance = new self();
-        $instance->request = new Request('GET', sprintf('%s?search=%s', '/api/films', $title));
+        $instance = new static();
+        $instance->title = $title;
 
         return $instance;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getMethod(): string
+    {
+        return 'GET';
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getPath(): string
+    {
+        return '/api/films';
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getParameters(): array
+    {
+        return ['search' => $this->title];
     }
 }
