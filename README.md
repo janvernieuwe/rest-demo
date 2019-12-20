@@ -49,11 +49,9 @@ use Phpro\RestDemo\StarwarsClient;
 
 $guzzle = new Client(['base_uri' => 'https://swapi.co']);
 $httpClient = new GuzzleAdapter($guzzle);
-$client = new StarwarsClient($httpClient);
-$films = $client->searchFilms((new SearchFilmRequest())->withTitle('return'));
+$client = StarwarsClient::create($httpClient);
+$films = $client->searchFilms(SearchFilmRequest::withTitle('return'));
 var_dump($films);
-
-
 ```
 
 End the array madness now, be lazy and autocomplete all the things!
