@@ -8,10 +8,13 @@ class FilmRequest implements RequestInterface
 {
     private int $id;
 
-    public function withId(int $id): self
+    private function __construct()
     {
-        $this->id = $id;
-        $instance = new static();
+    }
+
+    public static function withId(int $id): self
+    {
+        $instance = new self();
         $instance->id = $id;
 
         return $instance;

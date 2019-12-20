@@ -8,9 +8,13 @@ class SearchFilmRequest implements RequestInterface
 {
     private string $title;
 
-    public function withTitle(string $title): self
+    private function __construct()
     {
-        $instance = new static();
+    }
+
+    public static function withTitle(string $title): self
+    {
+        $instance = new self();
         $instance->title = $title;
 
         return $instance;

@@ -4,27 +4,24 @@ namespace Phpro\RestDemo;
 
 use Phpro\RestDemo\Request\Film\FilmRequest;
 use Phpro\RestDemo\Request\Film\SearchFilmRequest;
-use Phpro\RestDemo\Request\RequestFactory;
-use Phpro\RestDemo\Request\RequestInterface;
-use Phpro\RestDemo\Serializer\JmsSerializer;
-use Phpro\RestDemo\Serializer\ResponseSerializerInterface;
+use Phpro\RestDemo\Transport\BasicTransport;
+use Phpro\RestDemo\Transport\TransportInterface;
 use Phpro\RestDemo\Type;
 use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Client\ClientInterface;
 
 class StarwarsClient
 {
-    private ClientInterface $client;
-    private ResponseSerializerInterface $responseSerializer;
-    private RequestFactory $requestFactory;
+    private TransportInterface $transport;
 
-    public function __construct(
-        ClientInterface $client,
-        ResponseSerializerInterface $responseSerializer = null
-    ) {
-        $this->client = $client;
-        $this->responseSerializer = $responseSerializer ?? JmsSerializer::create();
-        $this->requestFactory = new RequestFactory();
+    public function __construct(TransportInterface $transport)
+    {
+        $this->transport = $transport;
+    }
+
+    public static function create(ClientInterface $client): self
+    {
+        return new self(BasicTransport::create($client));
     }
 
     /**
@@ -32,18 +29,7 @@ class StarwarsClient
      */
     public function getFilm(FilmRequest $filmRequest): Type\Film\Film
     {
-        return $this->request($filmRequest, Type\Film\Film::class);
-    }
-
-    /**
-     * @throws ClientExceptionInterface
-     */
-    private function request(RequestInterface $requestInterface, string $type)
-    {
-        $request = $this->requestFactory->createRequest($requestInterface);
-        $response = $this->client->sendRequest($request);
-
-        return $this->responseSerializer->convertResponse($response, $type);
+        return $this->transport->request($filmRequest, Type\Film\Film::class);
     }
 
     /**
@@ -51,6 +37,6 @@ class StarwarsClient
      */
     public function searchFilms(SearchFilmRequest $searchRequest): Type\Film\FilmSearchResponse
     {
-        return $this->request($searchRequest, Type\Film\FilmSearchResponse::class);
+        return $this->transport->request($searchRequest, Type\Film\FilmSearchResponse::class);
     }
 }
